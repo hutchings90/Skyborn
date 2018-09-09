@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Skyborn</title>
+	<link href='styles/main.css' type='text/css' rel='stylesheet'/>
+	<script src='js/Utils.js'></script>
+	<script src='js/ContentManager.js'></script>
+	<script src='js/Dialog.js'></script>
+	<script src='js/InputHandler.js'></script>
+	<script src='js/Item.js'></script>
+	<script src='js/Items.js'></script>
+	<script src='js/Pack.js'></script>
+	<script src='js/Stat.js'></script>
+	<script src='js/Stats.js'></script>
+	<script src='js/Player.js'></script>
+	<script src='js/Space.js'></script>
+	<script src='js/MapObject.js'></script>
+	<script src='js/Map.js'></script>
+	<script src='js/Maps.js'></script>
+	<script src='js/MenuInputHandler.js'></script>
+	<script src='js/MapInputHandler.js'></script>
+	<script src='js/MapDialogInputHandler.js'></script>
+	<script src='js/QuestInstruction.js'></script>
+	<script src='js/QuestInstructions.js'></script>
+	<script src='js/Skyborn.js'></script>
+	<script src='js/main.js'></script>
+</head>
+<body>
+	<div id='game'>
+		<div id='map-container'></div>
+		<div id='quest-instruction-container'></div>
+		<div id='dialogs'>
+			<ul id='map-dialog'></ul>
+		</div>
+		<div id='menus'>
+			<div id='game-map-menu'>
+				<div data-action='newGame'>New Game</div>
+				<div data-action='startSave'>Save Game</div>
+				<div data-action='startLoad'>Load Game</div>
+				<div data-action='startErase'>Erase Game</div>
+				<div data-action='closeGameMapMenu'>Close</div>
+			</div>
+			<div id='saved-games-menu'></div>
+			<div id='player-map-menu'>
+				<div data-action='showPlayerPackMenu'>Pack</div>
+				<div data-action='closePlayerMapMenu'>Close</div>
+			</div>
+			<div id='player-pack-menu'></div>
+		</div>
+		<div id='map-report'></div>
+	</div>
+</body>
+</html>
