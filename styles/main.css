@@ -117,38 +117,45 @@ body {
 	opacity: 0;
 }
 
-#quest-instruction-container > div {
+#quest-instruction-container {
 	opacity: 0;
 	transition-property: opacity;
 	transition-duration: .5s;
+	vertical-align: top;
+	font-size: 0px;
 }
 
-#quest-instruction-container > div.open {
+#quest-instruction-container.open {
 	opacity: 1;
 }
 
-#quest-instruction-container > div.close {
+#quest-instruction-container.close {
 	opacity: 0;
 }
 
-.quest-instruction-text {
+#quest-instruction-page {
 	background-color: white;
 	display: inline-block;
 	width: 428px;
-	height: 648px;
+	height: 658px;
 	border: 1px solid black;
-	padding: 5px;
-	vertical-align: top;
+	padding: 0px 5px;
 	font-family: cursive;
+	font-size: large;
+}
+
+#quest-instruction-title {
+	padding: 40px 5px;
+}
+
+#quest-instruction-text {
+	padding: 0px 5px;
+	white-space: pre-wrap;
 	overflow: hidden;
 }
 
-.quest-instruction-text-title {
-	margin: 40px;
-}
-
 .quest-instruction-text-text {
-	margin-top: 20px;
+	padding-bottom: 10px;
 	text-align: left;
 }
 

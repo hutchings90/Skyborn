@@ -12,7 +12,6 @@ function MapDialogInputHandler(skyborn) {
 	this.activePromptButtonI = 0;
 	this.isPrompting = false;
 	this.dy = 0;
-	this.autoScroll = true;
 	this.textInterval = null;
 	this.scrollInterval = null;
 }
@@ -26,29 +25,25 @@ MapDialogInputHandler.prototype.onkeydown = function(ev) {
 	case ESCAPE_KEY: if (this.canClose()) this.hideMapDialog(); break;
 	case SPACE_KEY: if (!this.keysDown[SPACE_KEY]) this.interact(); break;
 	case PAGEUP_KEY:
-		this.stopScrolling();
-		this.autoScroll = false;
+		this.clearScrollInterval();
 		this.e.scrollTop -= MAP_DIALOG_HEIGHT;
 		break;
 	case PAGEDOWN_KEY:
-		this.stopScrolling();
-		this.autoScroll = false;
+		this.clearScrollInterval();
 		this.e.scrollTop += MAP_DIALOG_HEIGHT;
 		break;
 	case END_KEY:
-		this.stopScrolling();
-		this.autoScroll = false;
-		this.e.scrollTop = this.e.scrollHeight - this.e.clientHeight;
+		this.clearScrollInterval();
+		this.e.scrollTop = this.e.scrollHeight;
 		break;
 	case HOME_KEY:
-		this.stopScrolling();
-		this.autoScroll = false;
+		this.clearScrollInterval();
 		this.e.scrollTop = 0;
 		break;
 	case W_KEY:
-	case UP_KEY: this.scrollText(-2); break;
+	case UP_KEY: this.scrollText(-SCROLL_INCREMENT); break;
 	case S_KEY:
-	case DOWN_KEY: this.scrollText(2); break;
+	case DOWN_KEY: this.scrollText(SCROLL_INCREMENT); break;
 	case D_KEY:
 	case RIGHT_KEY: this.selectPrompt(-1); break;
 	case A_KEY:
@@ -64,9 +59,9 @@ MapDialogInputHandler.prototype.onkeyup = function(ev) {
 	this.keysDown[ev.keyCode] = false;
 	switch (ev.keyCode) {
 	case W_KEY:
-	case UP_KEY: this.stopScrolling(); break;
+	case UP_KEY: this.clearScrollInterval(); break;
 	case DOWN_KEY:
-	case S_KEY: this.stopScrolling(); break;
+	case S_KEY: this.clearScrollInterval(); break;
 	default: return;
 	}
 	ev.preventDefault();
@@ -89,8 +84,6 @@ MapDialogInputHandler.prototype.setTextInterval = function() {
 	// console.log('setTextInterval');
 	var me = this;
 	me.isPrompting = false;
-	me.autoScroll = true;
-	me.scrollText(SCROLL_INCREMENT, true);
 	me.textInterval = setInterval(function() {
 		if (me.textI >= me.text.length) {
 			me.getNextText();
@@ -102,8 +95,10 @@ MapDialogInputHandler.prototype.setTextInterval = function() {
 		}
 		if (me.textI == 0) me.e.appendChild(document.createElement('li'));
 		me.e.children[me.eI].innerHTML += me.text[me.textI++];
+		if (me.e.scrollTop < me.e.scrollHeight - me.e.clientHeight) me.scrollText(SCROLL_INCREMENT);
 	}, TEXT_DISPLAY_RATE);
 	me.e.className += ' show';
+	me.scrollText(SCROLL_INCREMENT);
 };
 
 MapDialogInputHandler.prototype.hideMapDialog = function() {
@@ -115,34 +110,23 @@ MapDialogInputHandler.prototype.hideMapDialog = function() {
 		}
 	}
 	this.clearTextInterval(this.textInterval);
+	this.clearScrollInterval();
 	this.e.className = this.e.className.replace(/ show/g, '');
 	this.e.innerHTML = '';
 	this.skyborn.mapInputHandler.activate();
 	if (this.dialog) this.dialog.restart();
 };
 
-MapDialogInputHandler.prototype.scrollText = function(dy, autoScroll=false) {
+MapDialogInputHandler.prototype.scrollText = function(dy) {
 	// console.log('scrollText');
 	var me = this;
-	me.autoScroll = autoScroll;
-	if (!me.autoScroll) {
-		if (me.e.scrollHeight == me.e.clientHeight || dy == me.dy) return;
-		if (!me.canScrollInDirection(dy)) return false;
-	}
+	if (me.dy == dy) return;
 	clearInterval(me.scrollInterval);
 	me.dy = dy;
 	me.scrollInterval = setInterval(function() {
-		// console.log('scrollInterval');
 		var prev = me.e.scrollTop;
 		me.e.scrollTop += me.dy;
-		if (!me.autoScroll && me.e.scrollTop != prev + me.dy) me.stopScrolling();
 	}, SCROLL_RATE);
-};
-
-MapDialogInputHandler.prototype.stopScrolling = function() {
-	// console.log('stopScrolling');
-	clearInterval(this.scrollInterval);
-	this.dy = 0;
 };
 
 MapDialogInputHandler.prototype.canScrollInDirection = function(dy) {
@@ -154,6 +138,12 @@ MapDialogInputHandler.prototype.clearTextInterval = function() {
 	// console.log('clearTextInterval');
 	clearInterval(this.textInterval);
 	this.textInterval = null;
+};
+
+MapDialogInputHandler.prototype.clearScrollInterval = function() {
+	// console.log('clearScrollInterval');
+	clearInterval(this.scrollInterval);
+	this.dy = 0;
 };
 
 MapDialogInputHandler.prototype.showPrompt = function() {

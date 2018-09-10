@@ -1,23 +1,40 @@
-const QUEST_TITLE_DISPLAY_RATE = TEXT_DISPLAY_RATE * 2;
-const QUEST_TEXT_DISPLAY_RATE = TEXT_DISPLAY_RATE;
+const QUEST_SCROLL_INCREMENT = 2;
+const QUEST_SCROLL_RATE = 70;
 const QUEST_BEGUN = 'begun';
 const QUEST_COMPLETE = 'complete';
 
-function QuestInstruction(skyborn, image, texts, onend) {
+function QuestInstruction(skyborn, image, audio, texts, onend) {
 	// console.log('QuestInstruction');
-	var e = document.getElementById('quest-instruction-container');
-	while (e.lastChild) e.removeChild(e.lastChild);
+	this.e = document.getElementById('quest-instruction-container');
+	this.titleE = this.e.children[0].children[0];
+	this.textE = this.e.children[0].children[1];
+	this.clearElement(this.titleE);
+	this.clearElement(this.textE);
+	this.ended = false;
 	this.skyborn = skyborn;
 	this.image = image;
 	this.texts = texts;
-	this.i = 0;
-	this.text = '';
-	this.textI = 0;
-	this.textInterval = null;
+	this.audio = audio;
 	this.onend = onend || function(){};
-	e.appendChild(this.getDisplays());
-	this.e = e.firstChild;
+	this.setTitle();
+	this.setText();
+	this.setImage();
+	this.setAudio();
+	this.setKeys();
+	this.scrollIncrement = null;
+	this.ended = false;
 }
+
+QuestInstruction.prototype.setKeys = function() {
+	// console.log('setKeys');
+	this.keysDown = {};
+	this.keysUp = {};
+};
+
+QuestInstruction.prototype.clearElement = function(e) {
+	// console.log('clearElement');
+	while (e.lastChild) e.removeChild(e.lastChild);
+};
 
 QuestInstruction.prototype.start = function() {
 	// console.log('start');
@@ -28,6 +45,7 @@ QuestInstruction.prototype.start = function() {
 QuestInstruction.prototype.close = function() {
 	// console.log('close');
 	var me = this;
+	me.deactivate();
 	me.e.className = 'close';
 	var func = function() {
 		me.skyborn.utils.unsetTransitionListeners(me.e, func);
@@ -36,86 +54,133 @@ QuestInstruction.prototype.close = function() {
 	me.skyborn.utils.setTransitionListeners(me.e, func);
 };
 
-QuestInstruction.prototype.getDisplays = function() {
-	console.log();
-	var e = document.createElement('div');
-	e.appendChild(this.textDisplay());
-	e.appendChild(this.imageDisplay());
-	return e;
+QuestInstruction.prototype.setText = function() {
+	// console.log('setText');
+	for (var i = 1, length = this.texts.length; i < length; i++)
+		this.addTextToDisplay('\t' + this.texts[i]);
+	this.addTextToDisplay('END');
+	var padding = (660 - this.titleE.clientHeight);
+	this.textE.padding = padding;
+	this.textE.style.height = padding + 'px';
+	this.textE.firstChild.style.paddingTop = padding + 'px';
+	this.textE.lastChild.style.paddingBottom = padding + 'px';
 };
 
-QuestInstruction.prototype.textDisplay = function() {
-	// console.log('textDisplay');
-	var e = document.createElement('div');
-	e.className = 'quest-instruction-text';
-	return e;
+QuestInstruction.prototype.setImage = function() {
+	// console.log('setImage');
+	this.e.replaceChild(this.image, this.e.children[1]);
 };
 
-QuestInstruction.prototype.imageDisplay = function() {
-	// console.log('imageDisplay');
-	var e = this.image;
-	e.className = 'quest-instruction-image';
-	return e;
+QuestInstruction.prototype.setAudio = function() {
+	// console.log('setAudio');
+	var me = this;
+	me.audio.onended = function() {
+		me.ended = true;
+		me.activate();
+	};
+	me.e.replaceChild(me.audio, me.e.children[2]);
 };
 
 QuestInstruction.prototype.play = function() {
 	// console.log('play');
-	this.displayTitle();
-};
-
-QuestInstruction.prototype.displayTitle = function() {
-	// console.log('displayTitle');
 	var me = this;
-	me.i = 0;
-	me.text = me.texts[me.i++];
-	me.addTextToDisplay('quest-instruction-text-title');
-	me.textInterval = setInterval(function() {
-		if (me.textI < me.text.length) me.e.firstChild.lastChild.innerHTML += me.text[me.textI++];
-		else {
-			clearInterval(me.textInterval);
-			me.text = me.texts[me.i++];
-			me.addTextToDisplay('quest-instruction-text-text');
-			setTimeout(function() {
-				me.displayTexts();
-			}, 500);
-		}
-	}, QUEST_TITLE_DISPLAY_RATE);
+	setTimeout(function() {
+		me.scroll(QUEST_SCROLL_INCREMENT);
+		me.e.children[2].play();
+	}, 3000);
 };
 
-QuestInstruction.prototype.displayTexts = function() {
-	// console.log('displayTexts');
-	var me = this;
-	me.textI = 0;
-	me.textInterval = setInterval(function() {
-		if (me.textI >= me.text.length) {
-			if (me.i >= me.texts.length) {
-				clearInterval(me.textInterval);
-				clearInterval(me.autoScroll);
-				document.onkeydown = function(ev) {
-					switch (ev.keyCode) {
-					case ENTER_KEY:
-					case SPACE_KEY:
-					case ESCAPE_KEY: me.close(); break;
-					}
-				};
-				return;
-			}
-			me.addTextToDisplay('quest-instruction-text-text');
-			me.text = me.texts[me.i++];
-			me.textI = 0;
-		}
-		me.e.firstChild.lastChild.innerHTML += me.text[me.textI++];
-	}, QUEST_TEXT_DISPLAY_RATE);
-	me.scrollInterval = setInterval(function() {
-		var prev = me.e.firstChild.scrollTop;
-		me.e.firstChild.scrollTop += SCROLL_INCREMENT;
-		if (!me.autoScroll && me.e.firstChild.scrollTop != prev + SCROLL_INCREMENT) clearInterval(me.scrollInterval);
-	}, SCROLL_RATE);
+QuestInstruction.prototype.setTitle = function() {
+	// console.log('setTitle');
+	this.titleE.innerHTML = this.texts[0];
 };
 
-QuestInstruction.prototype.addTextToDisplay = function(className) {
+QuestInstruction.prototype.addTextToDisplay = function(text) {
 	// console.log('addTextToDisplay');
 	var e = document.createElement('div');
-	e.className = className;
-	this.e.firstChild.appendChild(e);
+	e.className = 'quest-instruction-text-text';
+	e.innerHTML = text;
+	this.textE.appendChild(e);
+};
+
+QuestInstruction.prototype.activate = function() {
+	// console.log('activate');
+	var me = this;
+	me.setKeys();
+	document.onkeydown = function(ev) {
+		if (me.keysDown[ev.keyCode]) return;
+		me.keysDown[ev.keyCode] = true;
+		switch (ev.keyCode) {
+		case ENTER_KEY:
+		case SPACE_KEY:
+		case ESCAPE_KEY: me.close(); break;
+		case W_KEY:
+		case UP_KEY: me.scroll(-QUEST_SCROLL_INCREMENT); break;
+		case S_KEY:
+		case DOWN_KEY: me.scroll(QUEST_SCROLL_INCREMENT); break;
+		case PAGEUP_KEY: me.setScrollTop(me.textE.scrollTop - me.textE.clientHeight); break;
+		case PAGEDOWN_KEY: me.setScrollTop(me.textE.scrollTop + me.textE.clientHeight); break;
+		case HOME_KEY: me.home(); break;
+		case END_KEY: me.end(); break;
+		}
+	};
+
+	document.onkeyup = function(ev) {
+		me.keysDown[ev.keyCode] = false;
+		switch (ev.keyCode) {
+		case W_KEY:
+		case UP_KEY: me.stopScrolling(-QUEST_SCROLL_INCREMENT); break;
+		case S_KEY:
+		case DOWN_KEY: me.stopScrolling(QUEST_SCROLL_INCREMENT); break;
+		}
+	}
+};
+
+QuestInstruction.prototype.deactivate = function() {
+	// console.log('deactivate');
+	document.onkeydown = null;
+};
+
+QuestInstruction.prototype.scroll = function(scrollIncrement) {
+	// console.log('scroll');
+	var me = this;
+	if (me.scrollInterval) clearInterval(me.scrollInterval);
+	var e = me.textE;
+	me.scrollIncrement = scrollIncrement;
+	me.scrollInterval = setInterval(function() {
+		e.scrollTop += me.scrollIncrement;
+		if (e.scrollTop < 1 || e.scrollTop >= e.scrollHeight - e.clientHeight) {
+			clearInterval(me.scrollInterval);
+			if (!me.ended) {
+				me.ended = true;
+				me.activate();
+			}
+		}
+	}, QUEST_SCROLL_RATE);
+};
+
+QuestInstruction.prototype.stopScrolling = function(scrollIncrement) {
+	// console.log('stopScrolling');
+	if (this.scrollIncrement == scrollIncrement) {
+		this.scrollIncrement = null;
+		clearInterval(this.scrollInterval);
+	}
+};
+
+QuestInstruction.prototype.setScrollTop = function(scrollTop) {
+	// console.log('setScrollTop');
+	clearInterval(this.scrollInterval);
+	if (scrollTop < this.textE.padding) scrollTop = this.textE.padding;
+	else if (scrollTop > this.textE.padding + this.textE.clientHeight) scrollTop = this.textE.scrollHeight - this.textE.padding;
+	this.textE.scrollTop = scrollTop;
+};
+
+QuestInstruction.prototype.home = function() {
+	// console.log('home');
+	this.setScrollTop(this.textE.padding);
+};
+
+QuestInstruction.prototype.end = function() {
+	// console.log('end');
+	this.setScrollTop(this.textE.scrollHeight - this.textE.padding);
 };

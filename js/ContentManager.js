@@ -21,6 +21,11 @@ ContentManager.prototype.getSprite = function(key, spriteKey) {
 	return this.content[key][spriteKey].cloneNode(true);
 };
 
+ContentManager.prototype.getAudio = function(key, src) {
+	// console.log('getAudio');
+	return this.content[key].cloneNode(true);
+};
+
 ContentManager.prototype.makeSprite = function(key, srcs) {
 	// console.log('makeSprite');
 	var images = [];
@@ -54,6 +59,14 @@ ContentManager.prototype.makeImage = function(src, height, width, id) {
 	return e;
 };
 
+ContentManager.prototype.makeAudio = function(key, src) {
+	// console.log('makeAudio');
+	var e = this.makeElement('audio');
+	e.appendChild(this.makeElement('source'));
+	e.firstChild.src = SOUND_PATH + src;
+	this.content[key] = e;
+};
+
 ContentManager.prototype.makeElement = function(type) {
 	// console.log('makeElement');
 	return document.createElement(type);
@@ -62,7 +75,8 @@ ContentManager.prototype.makeElement = function(type) {
 ContentManager.prototype.init = function() {
 	// console.log('init');
 	this.content = {};
-	this.makeQuestInstructionImage('retrieveRing', 'retrieveRing.png');
+	this.makeQuestInstructionImage('retrieveRingImage', 'retrieveRing.png');
+	this.makeAudio('retrieveRingAudio', 'retrieveRing.wav');
 	this.makeTile('black', 'black.png');
 	this.makeTile('brick', 'brick.png');
 	this.makeTile('rock1', 'rock1.png');
