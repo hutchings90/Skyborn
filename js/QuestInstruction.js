@@ -23,6 +23,10 @@ function QuestInstruction(skyborn, image, audio, texts, onend) {
 	this.setKeys();
 	this.scrollIncrement = null;
 	this.ended = false;
+	this.top = this.textE.padding;
+	this.bottom = this.textE.scrollHeight - this.textE.clientHeight - this.textE.padding + 5;
+	if (this.bottom < this.top) this.bottom = this.top;
+	console.log(this.bottom, this.top);
 }
 
 QuestInstruction.prototype.setKeys = function() {
@@ -85,7 +89,7 @@ QuestInstruction.prototype.play = function() {
 	// console.log('play');
 	var me = this;
 	setTimeout(function() {
-		me.scroll(QUEST_SCROLL_INCREMENT);
+		me.autoScroll(QUEST_SCROLL_INCREMENT);
 		me.e.children[2].play();
 	}, 3000);
 };
@@ -115,11 +119,11 @@ QuestInstruction.prototype.activate = function() {
 		case SPACE_KEY:
 		case ESCAPE_KEY: me.close(); break;
 		case W_KEY:
-		case UP_KEY: me.scroll(-QUEST_SCROLL_INCREMENT); break;
+		case UP_KEY: me.manualScroll(QUEST_SCROLL_INCREMENT); break;
 		case S_KEY:
-		case DOWN_KEY: me.scroll(QUEST_SCROLL_INCREMENT); break;
-		case PAGEUP_KEY: me.setScrollTop(me.textE.scrollTop - me.textE.clientHeight); break;
-		case PAGEDOWN_KEY: me.setScrollTop(me.textE.scrollTop + me.textE.clientHeight); break;
+		case DOWN_KEY: me.manualScroll(-QUEST_SCROLL_INCREMENT); break;
+		case PAGEUP_KEY: me.setScrollTopAdjusted(me.textE.scrollTop - me.textE.clientHeight); break;
+		case PAGEDOWN_KEY: me.setScrollTopAdjusted(me.textE.scrollTop + me.textE.clientHeight); break;
 		case HOME_KEY: me.home(); break;
 		case END_KEY: me.end(); break;
 		}
@@ -129,9 +133,9 @@ QuestInstruction.prototype.activate = function() {
 		me.keysDown[ev.keyCode] = false;
 		switch (ev.keyCode) {
 		case W_KEY:
-		case UP_KEY: me.stopScrolling(-QUEST_SCROLL_INCREMENT); break;
+		case UP_KEY: me.stopScrolling(QUEST_SCROLL_INCREMENT); break;
 		case S_KEY:
-		case DOWN_KEY: me.stopScrolling(QUEST_SCROLL_INCREMENT); break;
+		case DOWN_KEY: me.stopScrolling(-QUEST_SCROLL_INCREMENT); break;
 		}
 	}
 };
@@ -141,7 +145,7 @@ QuestInstruction.prototype.deactivate = function() {
 	document.onkeydown = null;
 };
 
-QuestInstruction.prototype.scroll = function(scrollIncrement) {
+QuestInstruction.prototype.autoScroll = function(scrollIncrement) {
 	// console.log('scroll');
 	var me = this;
 	if (me.scrollInterval) clearInterval(me.scrollInterval);
@@ -159,6 +163,19 @@ QuestInstruction.prototype.scroll = function(scrollIncrement) {
 	}, QUEST_SCROLL_RATE);
 };
 
+QuestInstruction.prototype.manualScroll = function(scrollIncrement) {
+	// console.log('manualScroll');
+	this.stopScrolling(this.scrollIncrement);
+	var me = this;
+	me.scrollIncrement = scrollIncrement;
+	me.scrollInterval = setInterval(function() {
+		if (me.setScrollTop(me.textE.scrollTop + me.scrollIncrement) == 0) {
+			me.setScrollTop(me.textE.scrollTop);
+			me.stopScrolling(me.scrollIncrement);
+		}
+	}, QUEST_SCROLL_RATE);
+};
+
 QuestInstruction.prototype.stopScrolling = function(scrollIncrement) {
 	// console.log('stopScrolling');
 	if (this.scrollIncrement == scrollIncrement) {
@@ -167,20 +184,27 @@ QuestInstruction.prototype.stopScrolling = function(scrollIncrement) {
 	}
 };
 
-QuestInstruction.prototype.setScrollTop = function(scrollTop) {
+QuestInstruction.prototype.setScrollTopAdjusted = function(scrollTop) {
 	// console.log('setScrollTop');
 	clearInterval(this.scrollInterval);
-	if (scrollTop < this.textE.padding) scrollTop = this.textE.padding;
-	else if (scrollTop > this.textE.padding + this.textE.clientHeight) scrollTop = this.textE.scrollHeight - this.textE.padding;
+	if (scrollTop < this.top) scrollTop = this.top;
+	else if (scrollTop > this.bottom) scrollTop = this.bottom;
+	this.setScrollTop(scrollTop);
+	return scrollTop;
+};
+
+QuestInstruction.prototype.setScrollTop = function(scrollTop) {
+	// console.log('setScrollTop');
 	this.textE.scrollTop = scrollTop;
+	return scrollTop;
 };
 
 QuestInstruction.prototype.home = function() {
 	// console.log('home');
-	this.setScrollTop(this.textE.padding);
+	this.setScrollTopAdjusted(this.top);
 };
 
 QuestInstruction.prototype.end = function() {
 	// console.log('end');
-	this.setScrollTop(this.textE.scrollHeight - this.textE.padding);
+	this.setScrollTopAdjusted(this.bottom);
 };
