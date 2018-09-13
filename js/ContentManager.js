@@ -80,6 +80,7 @@ ContentManager.prototype.init = function() {
 	this.makeTile('black', 'black.png');
 	this.makeTile('brick', 'brick.png');
 	this.makeTile('rock1', 'rock1.png');
+	this.makeTile('tree1', 'tree1.png');
 	this.makeTile('rugLeft1', 'rugLeft1.png');
 	this.makeTile('rugRight1', 'rugRight1.png');
 	this.makeTile('tile1', 'tile1.png');

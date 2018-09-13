@@ -1,7 +1,14 @@
 function Map1() {
 	// console.log('Map1');
 	var m = new Map('brick', [
-		new GenericPersonObject(1, 4, 'character1M', [ 'Welcome to the world of Skyborn! Do you know how we came to be?' ]),
+		new GenericPersonObject(1, 4, 'character1M', [ 'Welcome to the world of Skyborn! Do you know how we came to be?' ], function(skyborn, answer) {
+			switch (answer) {
+			case 0: this.texts = [ 'Isn\'t it wonderful?' ]; break;
+			case 1: this.texts = [ 'Well, then, let me tell you all about it. A long time ago, blah, blah, blah...' ]; break;
+			};
+			this.onanswer = null;
+			this.restart();
+		}),
 		new GenericPersonObject(5, 9, 'character2F', [ 'That other guy always wants to tell about how we came to be.', 'Isn\'t he annoying?' ]),
 		new HouseObject(1, 2, 1, 2, function(skyborn) {
 			skyborn.am.openDoor(skyborn, 'doorOpen1');
@@ -81,7 +88,7 @@ function Map3() {
 	], function(skyborn) {
 		mapState = skyborn.player.mapState;
 		switch (mapState.direction) {
-		case 'left': break;
+		case 'left':if (mapState.x == 0) skyborn.goToMap(5, 10, mapState.y); break;
 		case 'right': break;
 		case 'up': 
 			if (mapState.y == 0) {
@@ -104,6 +111,37 @@ function Map3() {
 	});
 	m.ringStatus = null;
 	return m;
+}
+
+function Map4() {
+	// console.log('Map4');
+	return new Map('brick', [
+		new TreeRow(0, 0, 11, 'horizontal', 1),
+	], function(skyborn) {
+		mapState = skyborn.player.mapState;
+		switch (mapState.direction) {
+		case 'left': if (mapState.x == 0) skyborn.goToMap(6, 10, mapState.y); break;
+		case 'right': if (mapState.x == 10) skyborn.goToMap(4, 0, mapState.y); break;
+		case 'up': break;
+		case 'down': break;
+		}
+	});
+}
+
+function Map5() {
+	// console.log('Map4');
+	return new Map('brick', [
+		new TreeRow(0, 0, 11, 'horizontal', 1),
+		new TreeRow(0, 0, 11, 'vertical', 1),
+	], function(skyborn) {
+		mapState = skyborn.player.mapState;
+		switch (mapState.direction) {
+		case 'left': break;
+		case 'right': if (mapState.x == 10) skyborn.goToMap(5, 0, mapState.y); break;
+		case 'up': break;
+		case 'down': break;
+		}
+	});
 }
 
 function ExitableHouse(mi, mx, my, ex, ey, flooring, mapObjects=[]) {

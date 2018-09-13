@@ -102,9 +102,7 @@ FenceObject.prototype.gate = function(key) {
 
 function RockObject(x, y, i, interact, oncollide) {
 	// console.log('RockObject');
-	MapObject.call(this, x, y, [[
-		new CollidingSpace('rock' + i, false, false, null, interact, oncollide)
-	]]);
+	MapObject.call(this, x, y, [[ new CollidingSpace('rock' + i, false, false, null, interact, oncollide) ]]);
 	this.className = 'RockObject';
 }
 
@@ -149,4 +147,40 @@ Stairs1.prototype.partial = function(side, hideTerrain) {
 Stairs1.prototype.middle = function(side) {
 	// console.log('partial');
 	return this.partial('Middle' + side);
+};
+
+function TreeRow(x, y, l, orientation, i) {
+	// console.log('TreeRow');
+	MapObject.call(this, x, y);
+	this[orientation](l, i);
+	this.className = 'TreeRow';
+}
+
+TreeRow.prototype = Object.create(MapObject.prototype);
+TreeRow.constructor = TreeRow;
+
+TreeRow.prototype.horizontal = function(l, i) {
+	// console.log('horizontal');
+	var key = 'tree' + i;
+	this.spaces = [[]];
+	this.spaces[0].length = l;
+	for (var i = 0; i < l; i++) this.spaces[0][i] = this.partial(key);
+};
+
+TreeRow.prototype.vertical = function(l, i) {
+	// console.log('vertical');
+	var key = 'tree' + i;
+	this.spaces = [];
+	this.spaces.length = l;
+	for (var i = 0; i < l; i++) {
+		var row = [];
+		row.length = 1;
+		row[0] = this.partial(key);
+		this.spaces[i] = row;
+	}
+};
+
+TreeRow.prototype.partial = function(key) {
+	// console.log('partial');
+	return new CollidingSpace(key, false, true)
 };
