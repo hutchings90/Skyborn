@@ -51,3 +51,8 @@ Player.prototype.loadStats = function(health, energy, attack, defense, speed) {
 	this.defense = new Defense(defense.cur, defense.max, defense.boosts);
 	this.speed = new Speed(hspeed.cur, hespeed.max, heaspeed.boosts);
 };
+
+Player.prototype.canSwim = function() {
+	// console.log('canSwim');
+	return false;
+};

@@ -78,6 +78,10 @@ ContentManager.prototype.init = function() {
 	this.makeQuestInstructionImage('retrieveRingImage', 'retrieveRing.png');
 	this.makeAudio('retrieveRingAudio', 'retrieveRing.wav');
 	this.makeTile('black', 'black.png');
+	this.makeTile('water', 'water.gif');
+	this.makeTile('mud', 'mud.png');
+	this.makeTile('grass', 'grass.png');
+	this.makeTile('dirt1', 'dirt1.png');
 	this.makeTile('brick', 'brick.png');
 	this.makeTile('rock1', 'rock1.png');
 	this.makeTile('tree1', 'tree1.png');

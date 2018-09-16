@@ -24,7 +24,7 @@ Skyborn.prototype.start = function() {
 
 Skyborn.prototype.freshMaps = function() {
 	// console.log('initMaps');
-	return [Map1(), House1(), House2(), Map2(), Map3(), Map4(), Map5()];
+	return [Map1(), House1(), House2(), Map2(), Map3(), Map4(), Map5(), Map6(), Map7(), Map8(), Map9(), Map10(), House3()];
 };
 
 Skyborn.prototype.showGameMapMenu = function() {

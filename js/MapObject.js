@@ -100,15 +100,6 @@ FenceObject.prototype.gate = function(key) {
 	return new CollidingSpace(key + 'GateClosed', false);
 };
 
-function RockObject(x, y, i, interact, oncollide) {
-	// console.log('RockObject');
-	MapObject.call(this, x, y, [[ new CollidingSpace('rock' + i, false, false, null, interact, oncollide) ]]);
-	this.className = 'RockObject';
-}
-
-RockObject.prototype = Object.create(MapObject.prototype);
-RockObject.constructor = RockObject;
-
 function Stairs1(x, y, l, side, orientation) {
 	// console.log('Stairs1');
 	MapObject.call(this, x, y);
@@ -159,7 +150,7 @@ function TreeRow(x, y, l, orientation, i) {
 TreeRow.prototype = Object.create(MapObject.prototype);
 TreeRow.constructor = TreeRow;
 
-TreeRow.prototype.horizontal = function(l, i) {
+TreeRow.prototype.horizontal = function(l, i='') {
 	// console.log('horizontal');
 	var key = 'tree' + i;
 	this.spaces = [[]];
@@ -167,7 +158,7 @@ TreeRow.prototype.horizontal = function(l, i) {
 	for (var i = 0; i < l; i++) this.spaces[0][i] = this.partial(key);
 };
 
-TreeRow.prototype.vertical = function(l, i) {
+TreeRow.prototype.vertical = function(l, i='') {
 	// console.log('vertical');
 	var key = 'tree' + i;
 	this.spaces = [];
@@ -182,5 +173,79 @@ TreeRow.prototype.vertical = function(l, i) {
 
 TreeRow.prototype.partial = function(key) {
 	// console.log('partial');
-	return new CollidingSpace(key, false, true)
+	return new CollidingSpace(key, false, true);
+};
+
+function WaterRow(x, y, l, orientation, i) {
+	// console.log('WaterRow');
+	MapObject.call(this, x, y);
+	this[orientation](l, i);
+	this.className = 'WaterRow';
+}
+
+WaterRow.prototype = Object.create(MapObject.prototype);
+WaterRow.constructor = WaterRow;
+
+WaterRow.prototype.horizontal = function(l) {
+	// console.log('horizontal');
+	var key = 'water';
+	this.spaces = [[]];
+	this.spaces[0].length = l;
+	for (var i = 0; i < l; i++) this.spaces[0][i] = this.partial(key);
+};
+
+WaterRow.prototype.vertical = function(l) {
+	// console.log('vertical');
+	var key = 'water';
+	this.spaces = [];
+	this.spaces.length = l;
+	for (var i = 0; i < l; i++) {
+		var row = [];
+		row.length = 1;
+		row[0] = this.partial(key);
+		this.spaces[i] = row;
+	}
+};
+
+WaterRow.prototype.partial = function(key) {
+	// console.log('partial');
+	return new Space(key, false, true, function() {}, null, function(skyborn) {
+		if (!skyborn.player.canSwim()) return true;
+	});
+};
+
+function RockRow(x, y, l, orientation, i) {
+	// console.log('RockRow');
+	MapObject.call(this, x, y);
+	this[orientation](l, i);
+	this.className = 'RockRow';
+}
+
+RockRow.prototype = Object.create(MapObject.prototype);
+RockRow.constructor = RockRow;
+
+RockRow.prototype.horizontal = function(l, i='') {
+	// console.log('horizontal');
+	var key = 'rock' + i;
+	this.spaces = [[]];
+	this.spaces[0].length = l;
+	for (var i = 0; i < l; i++) this.spaces[0][i] = this.partial(key);
+};
+
+RockRow.prototype.vertical = function(l, i='') {
+	// console.log('vertical');
+	var key = 'rock' + i;
+	this.spaces = [];
+	this.spaces.length = l;
+	for (var i = 0; i < l; i++) {
+		var row = [];
+		row.length = 1;
+		row[0] = this.partial(key);
+		this.spaces[i] = row;
+	}
+};
+
+RockRow.prototype.partial = function(key) {
+	// console.log('partial');
+	return new CollidingSpace(key);
 };

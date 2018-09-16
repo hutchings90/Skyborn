@@ -26,8 +26,12 @@ function Map1() {
 		new FenceObject(0, 10, 11, 5, 'fence1', 'Outside', 'horizontal', true),
 	], function(skyborn) {
 		var mapState = skyborn.player.mapState;
-		if (mapState.x != 0 || mapState.direction != 'left') return;
-		skyborn.goToMap(3, 10, mapState.y);
+		switch (mapState.direction) {
+		case 'left': if (mapState.x == 0) skyborn.goToMap(3, 10, mapState.y); break;
+		case 'right': break;
+		case 'up': break;
+		case 'down': break;
+		}
 	});
 	m.mapObjects[7].spaces[0][0].interact = function(skyborn) {
 		if (!this.foundHiddenItem) {
@@ -66,15 +70,15 @@ function Map2() {
 			this.onanswer = null;
 			this.restart();
 		}),
-		new RockObject(10, 0, 1),
-		new RockObject(10, 10, 1)
+		new RockRow(10, 0, 1, 'horizontal', 1),
+		new RockRow(10, 10, 1, 'horizontal', 1)
 	], function(skyborn) {
 		var mapState = skyborn.player.mapState;
 		switch (mapState.direction) {
-		case 'left': ; break;
+		case 'left': if (mapState.x == 0) skyborn.goToMap(11, 10, mapState.y); break;
 		case 'right': if (mapState.x == 10) skyborn.goToMap(0, 0, mapState.y); break;
 		case 'up': if (mapState.y == 0) skyborn.goToMap(4, mapState.x, 10); break;
-		case 'down': ; break;
+		case 'down': if (mapState.y == 10) skyborn.goToMap(10, mapState.x, 0); ; break;
 		}
 	});
 }
@@ -123,7 +127,7 @@ function Map4() {
 		case 'left': if (mapState.x == 0) skyborn.goToMap(6, 10, mapState.y); break;
 		case 'right': if (mapState.x == 10) skyborn.goToMap(4, 0, mapState.y); break;
 		case 'up': break;
-		case 'down': break;
+		case 'down': if (mapState.y == 10) skyborn.goToMap(11, mapState.x, 0); break;
 		}
 	});
 }
@@ -133,13 +137,95 @@ function Map5() {
 	return new Map('brick', [
 		new TreeRow(0, 0, 11, 'horizontal', 1),
 		new TreeRow(0, 0, 11, 'vertical', 1),
+		new HouseObject(1, 1, 1, 2, function(skyborn) {
+			skyborn.am.openDoor(skyborn, 'doorOpen1');
+			skyborn.goToMap(12, 8, 10);
+			return true;
+		}, [ 'Some Town', 'Court Jester' ])
 	], function(skyborn) {
 		mapState = skyborn.player.mapState;
 		switch (mapState.direction) {
 		case 'left': break;
 		case 'right': if (mapState.x == 10) skyborn.goToMap(5, 0, mapState.y); break;
 		case 'up': break;
+		case 'down': if (mapState.y == 10) skyborn.goToMap(7, mapState.x, 0); break;
+		}
+	});
+}
+
+function Map6() {
+	// console.log('Map6');
+	return new Map('mud', [
+		new RockRow(0, 0, 3, 'vertical', 1),
+		new WaterRow(0, 3, 5, 'vertical'),
+		new RockRow(0, 8, 3, 'vertical', 1),
+	], function(skyborn) {
+		mapState = skyborn.player.mapState;
+		switch (mapState.direction) {
+		case 'left': break;
+		case 'right': if (mapState.x == 10) skyborn.goToMap(11, 0, mapState.y); break;
+		case 'up': if (mapState.y == 0) skyborn.goToMap(6, mapState.x, 10); break;
+		case 'down': if (mapState.y == 10) skyborn.goToMap(8, mapState.x, 0); break;
+		}
+	});
+}
+
+function Map7() {
+	// console.log('Map7');
+	return new Map('grass', [
+		new TreeRow(0, 0, 11, 'vertical', 1),
+		new TreeRow(1, 10, 10, 'horizontal', 1),
+	], function(skyborn) {
+		mapState = skyborn.player.mapState;
+		switch (mapState.direction) {
+		case 'left': break;
+		case 'right': if (mapState.x == 10) skyborn.goToMap(9, 0, mapState.y); break;
+		case 'up': if (mapState.y == 0) skyborn.goToMap(7, mapState.x, 10); break;
 		case 'down': break;
+		}
+	});
+}
+
+function Map8() {
+	// console.log('Map8');
+	return new Map('grass', [
+		new TreeRow(0, 10, 11, 'horizontal', 1)
+	], function(skyborn) {
+		mapState = skyborn.player.mapState;
+		switch (mapState.direction) {
+		case 'left': if (mapState.x == 0) skyborn.goToMap(8, 10, mapState.y); break;
+		case 'right': if (mapState.x == 10) skyborn.goToMap(10, 0, mapState.y); break;
+		case 'up': if (mapState.y == 0) skyborn.goToMap(11, mapState.x, 10); break;
+		case 'down': break;
+		}
+	});
+}
+
+function Map9() {
+	// console.log('Map9');
+	return new Map('grass', [
+		new TreeRow(10, 0, 11, 'vertical', 1),
+		new TreeRow(0, 10, 10, 'horizontal', 1),
+	], function(skyborn) {
+		mapState = skyborn.player.mapState;
+		switch (mapState.direction) {
+		case 'left': if (mapState.x == 0) skyborn.goToMap(9, 10, mapState.y); break;
+		case 'right': break;
+		case 'up': if (mapState.y == 0) skyborn.goToMap(3, mapState.x, 10); break;
+		case 'down': break;
+		}
+	});
+}
+
+function Map10() {
+	// console.log('Map10');
+	return new Map('grass', [], function(skyborn) {
+		mapState = skyborn.player.mapState;
+		switch (mapState.direction) {
+		case 'left': if (mapState.x == 0) skyborn.goToMap(7, 10, mapState.y); break;
+		case 'right': if (mapState.x == 10) skyborn.goToMap(3, 0, mapState.y); break;
+		case 'up': if (mapState.y == 0) skyborn.goToMap(5, mapState.x, 10); break;
+		case 'down': if (mapState.y == 10) skyborn.goToMap(9, mapState.x, 0); break;
 		}
 	});
 }
@@ -166,4 +252,8 @@ function House1() {
 function House2() {
 	// console.log('House2');
 	return ExitableHouse(0, 8, 7, 7, 10, 'tile1', [ new GenericPersonObject(3, 4, 'character2M', [ 'Welcome! Make yourself at home.' ]) ]);
+}
+
+function House3() {
+	return ExitableHouse(6, 2, 3, 7, 10, 'tile1');
 }
