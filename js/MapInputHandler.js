@@ -7,6 +7,7 @@ MapInputHandler.prototype = Object.create(InputHandler.prototype);
 MapInputHandler.prototype.constructor = MapInputHandler;
 
 MapInputHandler.prototype.onkeydown = function(ev) {
+	if (this.keysDown[ev.keyCode]) return;
 	this.keysDown[ev.keyCode] = true;
 	switch (ev.keyCode) {
 	case ESCAPE_KEY: this.skyborn.showGameMapMenu(); break; // Enter

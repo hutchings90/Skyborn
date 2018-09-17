@@ -126,6 +126,12 @@ ContentManager.prototype.init = function() {
 		{name: 'playerFront.gif', key: 'downWalk'},
 		{name: 'playerFrontFrame.gif', key: 'downWalkFrame'}
 	]);
+	this.makeSprite('jester', [
+		{name: 'jesterLeft.png', key: 'left'},
+		{name: 'jesterBack.png', key: 'up'},
+		{name: 'jesterRight.png', key: 'right'},
+		{name: 'jesterFront.png', key: 'down'},
+	]);
 	this.makeSprite('character1M', [
 		{name: 'character1MLeft.png', key: 'left'},
 		{name: 'character1MBack.png', key: 'up'},

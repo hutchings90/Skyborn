@@ -9,7 +9,7 @@ function Map1() {
 			this.onanswer = null;
 			this.restart();
 		}),
-		new GenericPersonObject(5, 9, 'character2F', [ 'That other guy always wants to tell about how we came to be.', 'Isn\'t he annoying?' ]),
+		new GenericPersonObject(9, 8, 'character2F', [ 'That other guy always wants to tell about how we came to be.', 'Isn\'t he annoying?' ]),
 		new HouseObject(1, 2, 1, 2, function(skyborn) {
 			skyborn.am.openDoor(skyborn, 'doorOpen1');
 			skyborn.goToMap(1, 2, 10);
@@ -27,7 +27,11 @@ function Map1() {
 	], function(skyborn) {
 		var mapState = skyborn.player.mapState;
 		switch (mapState.direction) {
-		case 'left': if (mapState.x == 0) skyborn.goToMap(3, 10, mapState.y); break;
+		case 'left': if (mapState.x == 0) {
+				skyborn.goToMap(3, 10, mapState.y);
+				return true;
+			}
+			break;
 		case 'right': break;
 		case 'up': break;
 		case 'down': break;
@@ -75,10 +79,26 @@ function Map2() {
 	], function(skyborn) {
 		var mapState = skyborn.player.mapState;
 		switch (mapState.direction) {
-		case 'left': if (mapState.x == 0) skyborn.goToMap(11, 10, mapState.y); break;
-		case 'right': if (mapState.x == 10) skyborn.goToMap(0, 0, mapState.y); break;
-		case 'up': if (mapState.y == 0) skyborn.goToMap(4, mapState.x, 10); break;
-		case 'down': if (mapState.y == 10) skyborn.goToMap(10, mapState.x, 0); ; break;
+		case 'left': if (mapState.x == 0) {
+				skyborn.goToMap(11, 10, mapState.y);
+				return true;
+			}
+			break;
+		case 'right': if (mapState.x == 10) {
+				skyborn.goToMap(0, 0, mapState.y);
+				return true;
+			}
+			break;
+		case 'up': if (mapState.y == 0) {
+				skyborn.goToMap(4, mapState.x, 10);
+				return true;
+			}
+			break;
+		case 'down': if (mapState.y == 10) {
+				skyborn.goToMap(10, mapState.x, 0); ;
+				return true;
+			}
+			break;
 		}
 	});
 }
@@ -92,10 +112,13 @@ function Map3() {
 	], function(skyborn) {
 		mapState = skyborn.player.mapState;
 		switch (mapState.direction) {
-		case 'left':if (mapState.x == 0) skyborn.goToMap(5, 10, mapState.y); break;
+		case 'left': if (mapState.x == 0) {
+				skyborn.goToMap(5, 10, mapState.y);
+				return true;
+			}
+			break;
 		case 'right': break;
-		case 'up': 
-			if (mapState.y == 0) {
+		case 'up': if (mapState.y == 0) {
 				if (!m.ringStatus) skyborn.showQuestInstructions(new RetrieveRingQuestInstruction(skyborn), function(questInstruction) {
 					questInstruction.ringStatus = QUEST_BEGUN;
 				});
@@ -108,9 +131,14 @@ function Map3() {
 					}
 				}
 				else if (m.ringStatus == QUEST_COMPLETE) skyborn.mapDialogInputHandler.showMapDialog(new Dialog([ 'The castle is closed.' ]));
+				return true;
 			}
 			break;
-		case 'down': if (mapState.y == 10) skyborn.goToMap(3, mapState.x, 0); break;
+		case 'down': if (mapState.y == 10) {
+				skyborn.goToMap(3, mapState.x, 0);
+				return true;
+			}
+			break;
 		}
 	});
 	m.ringStatus = null;
@@ -124,10 +152,22 @@ function Map4() {
 	], function(skyborn) {
 		mapState = skyborn.player.mapState;
 		switch (mapState.direction) {
-		case 'left': if (mapState.x == 0) skyborn.goToMap(6, 10, mapState.y); break;
-		case 'right': if (mapState.x == 10) skyborn.goToMap(4, 0, mapState.y); break;
+		case 'left': if (mapState.x == 0) {
+				skyborn.goToMap(6, 10, mapState.y);
+				return true;
+			}
+			break;
+		case 'right': if (mapState.x == 10) {
+				skyborn.goToMap(4, 0, mapState.y);
+				return true;
+			}
+			break;
 		case 'up': break;
-		case 'down': if (mapState.y == 10) skyborn.goToMap(11, mapState.x, 0); break;
+		case 'down': if (mapState.y == 10) {
+				skyborn.goToMap(11, mapState.x, 0);
+				return true;
+			}
+			break;
 		}
 	});
 }
@@ -146,9 +186,17 @@ function Map5() {
 		mapState = skyborn.player.mapState;
 		switch (mapState.direction) {
 		case 'left': break;
-		case 'right': if (mapState.x == 10) skyborn.goToMap(5, 0, mapState.y); break;
+		case 'right': if (mapState.x == 10) {
+				skyborn.goToMap(5, 0, mapState.y);
+				return true;
+			}
+			break;
 		case 'up': break;
-		case 'down': if (mapState.y == 10) skyborn.goToMap(7, mapState.x, 0); break;
+		case 'down': if (mapState.y == 10) {
+				skyborn.goToMap(7, mapState.x, 0);
+				return true;
+			}
+			break;
 		}
 	});
 }
@@ -163,9 +211,21 @@ function Map6() {
 		mapState = skyborn.player.mapState;
 		switch (mapState.direction) {
 		case 'left': break;
-		case 'right': if (mapState.x == 10) skyborn.goToMap(11, 0, mapState.y); break;
-		case 'up': if (mapState.y == 0) skyborn.goToMap(6, mapState.x, 10); break;
-		case 'down': if (mapState.y == 10) skyborn.goToMap(8, mapState.x, 0); break;
+		case 'right': if (mapState.x == 10) {
+				skyborn.goToMap(11, 0, mapState.y);
+				return true;
+			}
+			break;
+		case 'up': if (mapState.y == 0) {
+				skyborn.goToMap(6, mapState.x, 10);
+				return true;
+			}
+			break;
+		case 'down': if (mapState.y == 10) {
+				skyborn.goToMap(8, mapState.x, 0);
+				return true;
+			}
+			break;
 		}
 	});
 }
@@ -179,8 +239,16 @@ function Map7() {
 		mapState = skyborn.player.mapState;
 		switch (mapState.direction) {
 		case 'left': break;
-		case 'right': if (mapState.x == 10) skyborn.goToMap(9, 0, mapState.y); break;
-		case 'up': if (mapState.y == 0) skyborn.goToMap(7, mapState.x, 10); break;
+		case 'right': if (mapState.x == 10) {
+				skyborn.goToMap(9, 0, mapState.y);
+				return true;
+			}
+			break;
+		case 'up': if (mapState.y == 0) {
+				skyborn.goToMap(7, mapState.x, 10);
+				return true;
+			}
+			break;
 		case 'down': break;
 		}
 	});
@@ -193,9 +261,21 @@ function Map8() {
 	], function(skyborn) {
 		mapState = skyborn.player.mapState;
 		switch (mapState.direction) {
-		case 'left': if (mapState.x == 0) skyborn.goToMap(8, 10, mapState.y); break;
-		case 'right': if (mapState.x == 10) skyborn.goToMap(10, 0, mapState.y); break;
-		case 'up': if (mapState.y == 0) skyborn.goToMap(11, mapState.x, 10); break;
+		case 'left': if (mapState.x == 0) {
+				skyborn.goToMap(8, 10, mapState.y);
+				return true;
+			}
+			break;
+		case 'right': if (mapState.x == 10) {
+				skyborn.goToMap(10, 0, mapState.y);
+				return true;
+			}
+			break;
+		case 'up': if (mapState.y == 0) {
+				skyborn.goToMap(11, mapState.x, 10);
+				return true;
+			}
+			break;
 		case 'down': break;
 		}
 	});
@@ -209,9 +289,17 @@ function Map9() {
 	], function(skyborn) {
 		mapState = skyborn.player.mapState;
 		switch (mapState.direction) {
-		case 'left': if (mapState.x == 0) skyborn.goToMap(9, 10, mapState.y); break;
+		case 'left': if (mapState.x == 0) {
+				skyborn.goToMap(9, 10, mapState.y);
+				return true;
+			}
+			break;
 		case 'right': break;
-		case 'up': if (mapState.y == 0) skyborn.goToMap(3, mapState.x, 10); break;
+		case 'up': if (mapState.y == 0) {
+				skyborn.goToMap(3, mapState.x, 10);
+				return true;
+			}
+			break;
 		case 'down': break;
 		}
 	});
@@ -222,26 +310,48 @@ function Map10() {
 	return new Map('grass', [], function(skyborn) {
 		mapState = skyborn.player.mapState;
 		switch (mapState.direction) {
-		case 'left': if (mapState.x == 0) skyborn.goToMap(7, 10, mapState.y); break;
-		case 'right': if (mapState.x == 10) skyborn.goToMap(3, 0, mapState.y); break;
-		case 'up': if (mapState.y == 0) skyborn.goToMap(5, mapState.x, 10); break;
-		case 'down': if (mapState.y == 10) skyborn.goToMap(9, mapState.x, 0); break;
+		case 'left': if (mapState.x == 0) {
+				skyborn.goToMap(7, 10, mapState.y);
+				return true;
+			}
+			break;
+		case 'right': if (mapState.x == 10) {
+				skyborn.goToMap(3, 0, mapState.y);
+				return true;
+			}
+			break;
+		case 'up': if (mapState.y == 0) {
+				skyborn.goToMap(5, mapState.x, 10);
+				return true;
+			}
+			break;
+		case 'down': if (mapState.y == 10) {
+				skyborn.goToMap(9, mapState.x, 0);
+				return true;
+			}
+			break;
 		}
 	});
 }
 
 function ExitableHouse(mi, mx, my, ex, ey, flooring, mapObjects=[]) {
 	// console.log('ExitableHouse');
-	var exitFunc = function(skyborn) {
-		if (skyborn.player.mapState.direction == 'down') {
-			skyborn.goToMap(mi, mx, my);
-			return true;
-		}
-	};
 	mapObjects.push(new MapObject(ex, ey, [
-		[ new Space('rugLeft1', false, true, null, null, null, exitFunc), new Space('rugRight1', false, true, null, null, null, exitFunc) ]
+		[ new Space('rugLeft1', false, true), new Space('rugRight1', false, true) ]
 	]));
-	return new Map(flooring, mapObjects);
+	return new Map(flooring, mapObjects, function(skyborn) {
+		var mapState = skyborn.player.mapState;
+		switch (mapState.direction) {
+		case 'left': break;
+		case 'right': break;
+		case 'up': break;
+		case 'down': if (mapState.y == ey && (mapState.x == ex || mapState.x == ex + 1)) {
+				skyborn.goToMap(mi, mx, my);
+				return true;
+			}
+			break;
+		}
+	});
 }
 
 function House1() {
@@ -255,5 +365,5 @@ function House2() {
 }
 
 function House3() {
-	return ExitableHouse(6, 2, 3, 7, 10, 'tile1');
+	return ExitableHouse(6, 2, 3, 7, 10, 'tile1', [ new GenericPersonObject(3, 4, 'jester', [ 'I played the best prank on the king yet! yuk, yuk, yuk' ]) ]);
 }

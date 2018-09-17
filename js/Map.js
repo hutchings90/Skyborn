@@ -143,8 +143,17 @@ Map.prototype.movePlayer = function(ih, direction) {
 	var cm = skyborn.cm;
 	var playerE = document.getElementById('player');
 	player.mapState.direction = direction;
+	if (ih.pivot()) {
+		playerE.parentElement.replaceChild(cm.getSprite('player', direction), playerE);
+		return;
+	}
 	var nextS = this.getSpace(player.mapState, player.mapState.direction);
-	if (ih.pivot() || this.getSpace(player.mapState).onleave(skyborn) || this.onleave(skyborn) || !nextS || nextS.oncollide(skyborn)) {
+	if (!nextS) {
+		playerE.parentElement.replaceChild(cm.getSprite('player', direction), playerE);
+		this.onleave(skyborn);
+		return;
+	}
+	if (nextS.oncollide(skyborn) || this.getSpace(player.mapState).onleave(skyborn)) {
 		playerE.parentElement.replaceChild(cm.getSprite('player', direction), playerE);
 		return;
 	}
@@ -173,19 +182,25 @@ Map.prototype.beginPlayerMovement = function(ih, mapE, cm, player, direction) {
 			me.positionPlayer(mapE, cm, player, direction);
 			var mapState = skyborn.player.mapState;
 			if (me.spaces[mapState.y][mapState.x].onenter(skyborn)) return;
+			var stop = false;
+			if (!ih.stillMoving(mapState.direction)) stop = true;
 			var nextS = me.getSpace(mapState, mapState.direction);
-			if (!ih.stillMoving(mapState.direction) || me.getSpace(mapState).onleave(skyborn) || me.onleave(skyborn) || !nextS || nextS.oncollide(skyborn)) {
+			if (!nextS) {
+				me.onleave(skyborn);
+				stop = true;
+			}
+			else if (nextS.oncollide(skyborn) || me.getSpace(mapState).onleave(skyborn)) stop = true;
+			if (stop) {
 				player.mapState.movement = null;
 				direction = ih.getOtherDirection(direction);
 				if (direction) {
 					me.movePlayer(ih, direction);
 				}
+				return;
 			}
-			else {
-				playerE = document.getElementById('player');
-				playerE.parentElement.replaceChild(cm.getSprite('player', direction + 'Walk'), playerE);
-				me.beginPlayerMovement(ih, mapE, cm, player, direction);
-			}
+			playerE = document.getElementById('player');
+			playerE.parentElement.replaceChild(cm.getSprite('player', direction + 'Walk'), playerE);
+			me.beginPlayerMovement(ih, mapE, cm, player, direction);
 		}
 	}, 20);
 };
@@ -244,4 +259,11 @@ Map.prototype.openDoor = function(skyborn, door) {
 	}
 	var e = document.getElementById('map').children[y].children[x];
 	e.replaceChild(skyborn.cm.getImage(door), e.lastChild);
+};
+
+Map.prototype.closeDoor = function(skyborn, door) {
+	// console.log('closeDoor');
+	var mapState = skyborn.player.mapState;
+	var e = document.getElementById('map').children[mapState.y].children[mapState.x];
+	e.replaceChild(skyborn.cm.getImage(door), e.lastChild.previousSibling);
 };

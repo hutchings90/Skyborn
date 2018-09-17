@@ -97,7 +97,11 @@ FenceObject.prototype.partial = function(key, side, hideTerrain) {
 
 FenceObject.prototype.gate = function(key) {
 	// console.log('gate');
-	return new CollidingSpace(key + 'GateClosed', false);
+	return new CollidingSpace(key + 'GateClosed', false, false, null, null, function(skyborn) {
+		skyborn.am.openDoor(skyborn, key + 'GateOpen');
+	}, function(skyborn) {
+		skyborn.am.closeDoor(skyborn, key + 'GateClosed');
+	});
 };
 
 function Stairs1(x, y, l, side, orientation) {
