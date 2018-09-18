@@ -97,8 +97,9 @@ Map.prototype.drawSpace = function(cm, s) {
 	return e;
 };
 
-Map.prototype.erase = function(skyborn, onend=function(){}) {
+Map.prototype.erase = function(skyborn, onend) {
 	// console.log('erase');
+	if (!onend) onend = function(){};
 	skyborn.mapInputHandler.deactivate();
 	var e = document.getElementById('map');
 	e.className = 'leaving';
@@ -177,30 +178,31 @@ Map.prototype.beginPlayerMovement = function(ih, mapE, cm, player, direction) {
 		case 'down': playerE.style.top = d + 'px'; break;
 		}
 		if (d > 59) {
-			clearInterval(interval);
+			d = 0;
 			player.mapMove(direction);
 			me.positionPlayer(mapE, cm, player, direction);
 			var mapState = skyborn.player.mapState;
-			if (me.spaces[mapState.y][mapState.x].onenter(skyborn)) return;
-			var stop = false;
-			if (!ih.stillMoving(mapState.direction)) stop = true;
-			var nextS = me.getSpace(mapState, mapState.direction);
-			if (!nextS) {
-				me.onleave(skyborn);
-				stop = true;
+			if (me.spaces[mapState.y][mapState.x].onenter(skyborn)) stop = true;
+			else {
+				var stop = false;
+				var nextS = me.getSpace(mapState, mapState.direction);
+				if (!ih.stillMoving(mapState.direction)) stop = true;
+				else if (!nextS) {
+					me.onleave(skyborn);
+					stop = true;
+				}
+				if (nextS && (nextS.oncollide(skyborn) || me.getSpace(mapState).onleave(skyborn))) stop = true;
 			}
-			else if (nextS.oncollide(skyborn) || me.getSpace(mapState).onleave(skyborn)) stop = true;
 			if (stop) {
+				clearInterval(interval);
 				player.mapState.movement = null;
 				direction = ih.getOtherDirection(direction);
-				if (direction) {
-					me.movePlayer(ih, direction);
-				}
+				if (direction) me.movePlayer(ih, direction);
 				return;
 			}
 			playerE = document.getElementById('player');
 			playerE.parentElement.replaceChild(cm.getSprite('player', direction + 'Walk'), playerE);
-			me.beginPlayerMovement(ih, mapE, cm, player, direction);
+			playerE = document.getElementById('player');
 		}
 	}, 20);
 };

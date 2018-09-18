@@ -196,7 +196,7 @@ MenuInputHandler.prototype.insertOption = function(e, i, after) {
 
 MenuInputHandler.prototype.validI = function(i) {
 	// console.log('validI');
-	return Number.isInteger(i) && i >= 0 && i < this.e.children.length;
+	return i >= 0 && i < this.e.children.length;
 };
 
 MenuInputHandler.prototype.removeSelectedOption = function() {

@@ -67,8 +67,9 @@ MapDialogInputHandler.prototype.onkeyup = function(ev) {
 	ev.preventDefault();
 };
 
-MapDialogInputHandler.prototype.showMapDialog = function(dialog, isClosable=true) {
+MapDialogInputHandler.prototype.showMapDialog = function(dialog, isClosable) {
 	// console.log('showMapDialog');
+	if (isClosable === null) isClosable = true;
 	this.activate();
 	this.isClosable = isClosable;
 	this.dialog = dialog;

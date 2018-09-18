@@ -1,7 +1,8 @@
 const HERB_HEAL_AMOUNT = 15;
 
-function Herb(count=1) {
+function Herb(count) {
 	// console.log('Herb');
+	if (count === null) count = 1;
 	DuplicatableItem.call(this, 'Herb', count);
 }
 

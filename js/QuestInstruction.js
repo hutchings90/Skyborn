@@ -26,7 +26,6 @@ function QuestInstruction(skyborn, image, audio, texts, onend) {
 	this.top = this.textE.padding;
 	this.bottom = this.textE.scrollHeight - this.textE.clientHeight - this.textE.padding + 5;
 	if (this.bottom < this.top) this.bottom = this.top;
-	console.log(this.bottom, this.top);
 }
 
 QuestInstruction.prototype.setKeys = function() {
@@ -143,6 +142,7 @@ QuestInstruction.prototype.activate = function() {
 QuestInstruction.prototype.deactivate = function() {
 	// console.log('deactivate');
 	document.onkeydown = null;
+	clearInterval(this.scrollInterval);
 };
 
 QuestInstruction.prototype.autoScroll = function(scrollIncrement) {

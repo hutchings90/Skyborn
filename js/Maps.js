@@ -334,8 +334,9 @@ function Map10() {
 	});
 }
 
-function ExitableHouse(mi, mx, my, ex, ey, flooring, mapObjects=[]) {
+function ExitableHouse(mi, mx, my, ex, ey, flooring, mapObjects) {
 	// console.log('ExitableHouse');
+	if (!mapObjects) mapObjects = [];
 	mapObjects.push(new MapObject(ex, ey, [
 		[ new Space('rugLeft1', false, true), new Space('rugRight1', false, true) ]
 	]));

@@ -277,8 +277,9 @@ Skyborn.prototype.makeMenuOption = function(innerHTML, action) {
 	return e;
 };
 
-Skyborn.prototype.showQuestInstructions = function(questInstruction, onend=function(){}) {
+Skyborn.prototype.showQuestInstructions = function(questInstruction, onend) {
 	// console.log('showQuestInstructions');
+	if (!onend) onend = function(){};
 	var me = this;
 	var func = function() {
 		if (me.questInstruction) me.questInstruction.close();

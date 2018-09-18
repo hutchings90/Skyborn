@@ -154,16 +154,18 @@ function TreeRow(x, y, l, orientation, i) {
 TreeRow.prototype = Object.create(MapObject.prototype);
 TreeRow.constructor = TreeRow;
 
-TreeRow.prototype.horizontal = function(l, i='') {
+TreeRow.prototype.horizontal = function(l, i) {
 	// console.log('horizontal');
+	if (i === null) i = '';
 	var key = 'tree' + i;
 	this.spaces = [[]];
 	this.spaces[0].length = l;
 	for (var i = 0; i < l; i++) this.spaces[0][i] = this.partial(key);
 };
 
-TreeRow.prototype.vertical = function(l, i='') {
+TreeRow.prototype.vertical = function(l, i) {
 	// console.log('vertical');
+	if (i === null) i = '';
 	var key = 'tree' + i;
 	this.spaces = [];
 	this.spaces.length = l;
@@ -228,16 +230,18 @@ function RockRow(x, y, l, orientation, i) {
 RockRow.prototype = Object.create(MapObject.prototype);
 RockRow.constructor = RockRow;
 
-RockRow.prototype.horizontal = function(l, i='') {
+RockRow.prototype.horizontal = function(l, i) {
 	// console.log('horizontal');
+	if (i === null) i = '';
 	var key = 'rock' + i;
 	this.spaces = [[]];
 	this.spaces[0].length = l;
 	for (var i = 0; i < l; i++) this.spaces[0][i] = this.partial(key);
 };
 
-RockRow.prototype.vertical = function(l, i='') {
+RockRow.prototype.vertical = function(l, i) {
 	// console.log('vertical');
+	if (i === null) i = '';
 	var key = 'rock' + i;
 	this.spaces = [];
 	this.spaces.length = l;
