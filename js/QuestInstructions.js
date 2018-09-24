@@ -16,3 +16,22 @@ function RetrieveRingQuestInstruction(skyborn) {
 
 RetrieveRingQuestInstruction.prototype = Object.create(QuestInstruction.prototype);
 RetrieveRingQuestInstruction.constructor = RetrieveRingQuestInstruction;
+
+function RingRetrievedQuestInstruction(skyborn) {
+	// console.log('RingRetrievedQuestInstruction');
+	var ring = new RingOfAndoris().name;
+	QuestInstruction.call(this, skyborn, skyborn.cm.getImage('retrieveRingImage'), skyborn.cm.getAudio('ringRetrievedAudio'), [
+		'The ' + ring,
+		'Why, you\'ve done it! You\'ve found the ' + ring + '!',
+		'Very well, brave one. I will help you.',
+		'The guard at the entrance to the town will allow you to pass through now.',
+		'Farewell!'
+	], function(skyborn) {
+		skyborn.player.mapState.direction = 'down';
+		skyborn.maps[4].ringStatus = QUEST_COMPLETE;
+		skyborn.goToMap(4, skyborn.player.mapState.x, skyborn.player.mapState.y);
+	});
+}
+
+RingRetrievedQuestInstruction.prototype = Object.create(QuestInstruction.prototype);
+RingRetrievedQuestInstruction.constructor = RingRetrievedQuestInstruction;

@@ -119,18 +119,16 @@ function Map3() {
 			break;
 		case 'right': break;
 		case 'up': if (mapState.y == 0) {
-				if (!m.ringStatus) skyborn.showQuestInstructions(new RetrieveRingQuestInstruction(skyborn), function(questInstruction) {
-					questInstruction.ringStatus = QUEST_BEGUN;
-				});
+				if (!m.ringStatus) skyborn.showQuestInstructions(new RetrieveRingQuestInstruction(skyborn));
 				else if (m.ringStatus == QUEST_BEGUN) {
 					var ring = new RingOfAndoris();
 					if (!skyborn.player.pack.hasItem(ring)) skyborn.mapDialogInputHandler.showMapDialog(new Dialog([ 'Come back when you have the ' + ring.name + '.' ]));
 					else {
 						skyborn.questInstruction.text = '';
-						skyborn.showQuestInstructions();
+						skyborn.showQuestInstructions(new RingRetrievedQuestInstruction(skyborn));
 					}
 				}
-				else if (m.ringStatus == QUEST_COMPLETE) skyborn.mapDialogInputHandler.showMapDialog(new Dialog([ 'The castle is closed.' ]));
+				else if (m.ringStatus == QUEST_COMPLETE) skyborn.mapDialogInputHandler.showMapDialog(new Dialog([ 'Thank you for your help!' ]));
 				return true;
 			}
 			break;

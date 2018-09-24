@@ -125,6 +125,7 @@ ContentManager.prototype.initTiles = function() {
 ContentManager.prototype.initSounds = function() {
 	// console.log('initSounds');
 	this.makeAudio('retrieveRingAudio', 'retrieveRing.wav');
+	this.makeAudio('ringRetrievedAudio', 'ringRetrieved.wav');
 };
 
 ContentManager.prototype.initSprites = function() {

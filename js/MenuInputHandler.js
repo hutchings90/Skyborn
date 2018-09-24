@@ -155,7 +155,10 @@ MenuInputHandler.prototype.chooseSelected = function() {
 	var e = this.getSelectedE();
 	if (e.tagName != 'INPUT') e.className = e.className.replace(/ selected-menu-button/g, '') + ' chosen-menu-button';
 	switch (e.dataset.type) {
-	case 'item': this.skyborn.report(this.useItem(e)); break;
+	case 'item':
+		var report = this.useItem(e);
+		if (report) this.skyborn.report(this.useItem(e));
+		break;
 	default:
 		if (e.innerHTML == 'Close') this.close();
 		else this.skyborn[e.dataset.action](e);
