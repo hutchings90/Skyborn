@@ -279,7 +279,7 @@ Skyborn.prototype.makeMenuOption = function(innerHTML, action) {
 
 Skyborn.prototype.showQuestInstructions = function(questInstruction, onend) {
 	// console.log('showQuestInstructions');
-	if (!onend) onend = function(){};
+	if (!onend) onend = EMPTY_FUNC;
 	var me = this;
 	var func = function() {
 		if (me.questInstruction) me.questInstruction.close();

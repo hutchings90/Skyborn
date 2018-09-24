@@ -75,8 +75,19 @@ ContentManager.prototype.makeElement = function(type) {
 ContentManager.prototype.init = function() {
 	// console.log('init');
 	this.content = {};
+	this.initQuestInstructions();
+	this.initTiles();
+	this.initSounds();
+	this.initSprites();
+};
+
+ContentManager.prototype.initQuestInstructions = function() {
+	// console.log('initQuestInstructions');
 	this.makeQuestInstructionImage('retrieveRingImage', 'retrieveRing.png');
-	this.makeAudio('retrieveRingAudio', 'retrieveRing.wav');
+};
+
+ContentManager.prototype.initTiles = function() {
+	// console.log('initTiles');
 	this.makeTile('black', 'black.png');
 	this.makeTile('water', 'water.gif');
 	this.makeTile('mud', 'mud.png');
@@ -108,6 +119,16 @@ ContentManager.prototype.init = function() {
 	this.makeTile('stairs1BottomLeft', 'stairs1BottomLeft.png');
 	this.makeTile('stairs1BottomRight', 'stairs1BottomRight.png');
 	this.makeTile('stairs1Middle', 'stairs1Middle.png');
+	this.makeTile('ringOfAndorisGif', 'ringOfAndoris.gif');
+};
+
+ContentManager.prototype.initSounds = function() {
+	// console.log('initSounds');
+	this.makeAudio('retrieveRingAudio', 'retrieveRing.wav');
+};
+
+ContentManager.prototype.initSprites = function() {
+	// console.log('initSprites');
 	this.makeSprite('player', [
 		{name: 'playerLeft.png', key: 'left'},
 		{name: 'playerLeftFrame.png', key: 'leftFrame'},

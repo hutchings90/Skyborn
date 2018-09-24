@@ -99,7 +99,7 @@ Map.prototype.drawSpace = function(cm, s) {
 
 Map.prototype.erase = function(skyborn, onend) {
 	// console.log('erase');
-	if (!onend) onend = function(){};
+	if (!onend) onend = EMPTY_FUNC;
 	skyborn.mapInputHandler.deactivate();
 	var e = document.getElementById('map');
 	e.className = 'leaving';
@@ -268,4 +268,10 @@ Map.prototype.closeDoor = function(skyborn, door) {
 	var mapState = skyborn.player.mapState;
 	var e = document.getElementById('map').children[mapState.y].children[mapState.x];
 	e.replaceChild(skyborn.cm.getImage(door), e.lastChild.previousSibling);
+};
+
+Map.prototype.replaceSpace = function(skyborn, space, x, y) {
+	// console.log('replaceImage');
+	var parentE = skyborn.es['map-container'].firstChild.children[2];
+	parentE.replaceChild(this.drawSpace(skyborn.cm, space), parentE.firstChild);
 };

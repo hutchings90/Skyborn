@@ -203,7 +203,7 @@ function Map5() {
 
 function Map6() {
 	// console.log('Map6');
-	return new Map('mud', [
+	var m = new Map('mud', [
 		new RockRow(0, 0, 3, 'vertical', 1),
 		new WaterRow(0, 3, 5, 'vertical'),
 		new RockRow(0, 8, 3, 'vertical', 1),
@@ -228,6 +228,19 @@ function Map6() {
 			break;
 		}
 	});
+	var ring = new RingOfAndoris();
+	var mo = m.mapObjects[0];
+	var space = mo.spaces[2][0];
+	space.key = 'ringOfAndorisGif';
+	space.interact = function(skyborn) {
+		if (!skyborn.player.pack.addItem(ring)) {
+			space.interact = EMPTY_FUNC;
+			space.key = 'rock1';
+			skyborn.am.replaceSpace(skyborn, space, 0, 2);
+			skyborn.report('Found ' + ring.name + '!');
+		}
+	};
+	return m;
 }
 
 function Map7() {
