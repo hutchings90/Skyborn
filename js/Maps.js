@@ -123,10 +123,7 @@ function Map3() {
 				else if (m.ringStatus == QUEST_BEGUN) {
 					var ring = new RingOfAndoris();
 					if (!skyborn.player.pack.hasItem(ring)) skyborn.mapDialogInputHandler.showMapDialog(new Dialog([ 'Come back when you have the ' + ring.name + '.' ]));
-					else {
-						skyborn.questInstruction.text = '';
-						skyborn.showQuestInstructions(new RingRetrievedQuestInstruction(skyborn));
-					}
+					else skyborn.showQuestInstructions(new RingRetrievedQuestInstruction(skyborn));
 				}
 				else if (m.ringStatus == QUEST_COMPLETE) skyborn.mapDialogInputHandler.showMapDialog(new Dialog([ 'Thank you for your help!' ]));
 				return true;

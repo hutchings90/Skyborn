@@ -11,6 +11,7 @@ function RetrieveRingQuestInstruction(skyborn) {
 		skyborn.player.mapState.direction = 'down';
 		skyborn.maps[4].ringStatus = QUEST_BEGUN;
 		skyborn.goToMap(4, skyborn.player.mapState.x, skyborn.player.mapState.y);
+		skyborn.questInstruction = null;
 	});
 }
 
@@ -30,6 +31,7 @@ function RingRetrievedQuestInstruction(skyborn) {
 		skyborn.player.mapState.direction = 'down';
 		skyborn.maps[4].ringStatus = QUEST_COMPLETE;
 		skyborn.goToMap(4, skyborn.player.mapState.x, skyborn.player.mapState.y);
+		skyborn.questInstruction = null;
 	});
 }
 
