@@ -185,11 +185,14 @@ Map.prototype.beginPlayerMovement = function(ih, mapE, cm, player, direction) {
 			if (me.spaces[mapState.y][mapState.x].onenter(skyborn)) stop = true;
 			else {
 				var stop = false;
-				var nextS = me.getSpace(mapState, mapState.direction);
+				var nextS = null;
 				if (!ih.stillMoving(mapState.direction)) stop = true;
-				else if (!nextS) {
-					me.onleave(skyborn);
-					stop = true;
+				else {
+					nextS = me.getSpace(mapState, mapState.direction);
+					if (!nextS) {
+						me.onleave(skyborn);
+						stop = true;
+					}
 				}
 				if (nextS && (nextS.oncollide(skyborn) || me.getSpace(mapState).onleave(skyborn))) stop = true;
 			}
