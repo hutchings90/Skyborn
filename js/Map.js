@@ -15,22 +15,6 @@ function Map(defaultTerrain, mapObjects, onleave) {
 	this.refreshSpaces();
 }
 
-Map.prototype.load = function(data) {
-	// console.log('load');
-	this.height = data.height;
-	this.width = data.width;
-	this.defaultTerrain = data.defaultTerrain;
-	this.mapObjects = [];
-	for (var i = 0; i < data.mapObjects.length; i++) {
-		var m = new window[data.mapObjects[i].className]();
-		m.load(data.mapObjects[i]);
-		data.mapObjects[i] = m;
-	}
-	this.spaces = [];
-	this.spaces.length = this.height;
-	this.refreshSpaces();
-};
-
 Map.prototype.refreshSpaces = function() {
 	// console.log('refreshSpaces');
 	for (var i = 0; i < this.height; i++) {

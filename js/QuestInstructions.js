@@ -28,8 +28,12 @@ function RingRetrievedQuestInstruction(skyborn) {
 		'The guard at the entrance to the town will allow you to pass through now.',
 		'Farewell!'
 	], function(skyborn) {
+		var guard = skyborn.maps[0].mapObjects[2];
+		guard.x = 6;
+		guard.spaces[0][0].interactDialog.texts = [ 'I heard about the assistance you provided to the king! As a token of appreciation for your honorable act, you are allowed to pass through now.' ];
 		skyborn.player.mapState.direction = 'down';
 		skyborn.maps[4].ringStatus = QUEST_COMPLETE;
+		skyborn.maps[0].refreshSpaces();
 		skyborn.goToMap(4, skyborn.player.mapState.x, skyborn.player.mapState.y);
 		skyborn.questInstruction = null;
 	});

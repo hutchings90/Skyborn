@@ -22,7 +22,7 @@ MapDialogInputHandler.prototype.constructor = MapDialogInputHandler;
 MapDialogInputHandler.prototype.onkeydown = function(ev) {
 	// console.log('onkeydown');
 	switch (ev.keyCode) {
-	case ESCAPE_KEY: if (this.canClose()) this.hideMapDialog(); break;
+	case ESCAPE_KEY: this.hideMapDialog(); break;
 	case SPACE_KEY: if (!this.keysDown[SPACE_KEY]) this.interact(); break;
 	case PAGEUP_KEY:
 		this.clearScrollInterval();
@@ -210,10 +210,4 @@ MapDialogInputHandler.prototype.selectPrompt = function(di) {
 	e.className = e.className.replace(/ selected-prompt-button/g, '');
 	this.activePromptButtonI = Math.abs(this.activePromptButtonI + di) % 2;
 	es[this.activePromptButtonI].className += ' selected-prompt-button';
-};
-
-MapDialogInputHandler.prototype.canClose = function() {
-	// console.log('canClose');
-	if (this.isClosable) return true;
-	return !this.isPrompting && (this.isClosable || this.dialog.isFinished());
 };

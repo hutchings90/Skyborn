@@ -126,6 +126,7 @@ ContentManager.prototype.initSounds = function() {
 	// console.log('initSounds');
 	this.makeAudio('retrieveRingAudio', 'retrieveRing.wav');
 	this.makeAudio('ringRetrievedAudio', 'ringRetrieved.wav');
+	this.makeAudio('endGameAudio', 'endGame.wav');
 };
 
 ContentManager.prototype.initSprites = function() {
@@ -189,5 +190,11 @@ ContentManager.prototype.initSprites = function() {
 		{name: 'character3FBack.png', key: 'up'},
 		{name: 'character3FRight.png', key: 'right'},
 		{name: 'character3FFront.png', key: 'down'},
+	]);
+	this.makeSprite('soldier', [
+		{name: 'soldierLeft.png', key: 'left'},
+		{name: 'soldierBack.png', key: 'up'},
+		{name: 'soldierRight.png', key: 'right'},
+		{name: 'soldierFront.png', key: 'down'},
 	]);
 };

@@ -6,19 +6,13 @@ function MapObject(x, y, spaces) {
 	this.className = 'MapObject';
 }
 
-MapObject.prototype.load = function(data) {
-	console.log('load');
-	var l = data.spaces.length;
-	this.x = data.x;
-	this.y = data.y;
-	this.spaces.length = l;
-	for (var i = 0; i < l; i++) {}
-};
-
 function GenericPersonObject(x, y, key, texts, onanswer, onend) {
 	// console.log('GenericPersonObject');
-	MapObject.call(this, x, y, [
+	var mo = this;
+	MapObject.call(mo, x, y, [
 		[ new CollidingSpace(key, true, false, null, function(skyborn) {
+			var x = mo.x;
+			var y = mo.y;
 			var dx = x - skyborn.player.mapState.x;
 			var dy = y - skyborn.player.mapState.y;
 			var e = document.getElementById('map').children[y].children[x];

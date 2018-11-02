@@ -109,132 +109,6 @@ Skyborn.prototype.newGame = function() {
 	this.start();
 };
 
-Skyborn.prototype.startSave = function() {
-	// console.log('startSave');
-	this.menuInputHandler = new MenuInputHandler(this, 'saved-games-menu', 'closeSavedGameMenuFromSave');
-	this.populateSavedGamesMenu('saveGame', true);
-	this.menuInputHandler.activate();
-	this.menuInputHandler.show();
-};
-
-Skyborn.prototype.newSave = function() {
-	// console.log('newSave');
-	var e = document.querySelector('#saved-games-menu #new-save');
-	var name = e.value;
-	if (!name) this.report('Enter a name (alphanumeric (spaces allowed))');
-	else if (!name.match(/[^\s]/g)) this.report('Enter a name that includes non-whitespace characters');
-	else if (name.match(/[^a-zA-Z0-9\s]/g)) this.report('Enter a name that is alphanumeric (spaces allowed)');
-	else if (localStorage.getItem(SAVE_PREFIX + name)) this.report('Enter a name that is not currently in use');
-	else {
-		e.value = '';
-		e = this.makeMenuOption(name, 'saveGame');
-		this.saveGame(e);
-		this.menuInputHandler.insertOption(e, null, true);
-	}
-};
-
-Skyborn.prototype.saveGame = function(e) {
-	// console.log('saveGame');
-	localStorage.setItem(SAVE_PREFIX + e.innerHTML, JSON.stringify(this.getSaveData()));
-};
-
-Skyborn.prototype.getSaveData = function() {
-	// console.log('getSaveData');
-	return {
-		player: this.player,
-		maps: this.maps
-	};
-};
-
-Skyborn.prototype.startLoad = function() {
-	// console.log('startLoad');
-	this.menuInputHandler = new MenuInputHandler(this, 'saved-games-menu', 'closeSavedGameMenuFromLoad');
-	this.populateSavedGamesMenu('loadGame');
-	this.menuInputHandler.activate();
-	this.menuInputHandler.show();
-};
-
-Skyborn.prototype.loadGame = function(e) {
-	// console.log('loadGame');
-	var name = e.innerHTML;
-	var data = JSON.parse(localStorage.getItem(SAVE_PREFIX + name));
-	console.log(SAVE_PREFIX + name);
-	console.log(data);
-	console.log(localStorage);
-	if (!data) this.report('Could not find ' + name);
-	else {
-		try {
-			this.player.load(data.player);
-			for (var i = 0, l = data.maps.length; i < l; i++)
-				this.maps[i].load(data.maps[i]);
-			this.menuInputHandler.close();
-			this.menuInputHandler = new MenuInputHandler(this, 'game-map-menu', 'closeGameMapMenu', 2)
-			this.menuInputHandler.close();
-			this.loadDOM();
-			this.start();
-		} catch(err) {
-			this.report('Failed to load save file ' + name);
-		}
-	}
-};
-
-Skyborn.prototype.startErase = function() {
-	// console.log('startErase');
-	this.menuInputHandler = new MenuInputHandler(this, 'saved-games-menu', 'closeSavedGameMenuFromErase');
-	this.populateSavedGamesMenu('eraseGame');
-	this.menuInputHandler.activate();
-	this.menuInputHandler.show();
-};
-
-Skyborn.prototype.eraseGame = function() {
-	// console.log('eraseGame');
-	var e = this.menuInputHandler.removeSelectedOption(e);
-	if (e) {
-		var name = SAVE_PREFIX + e.innerHTML;
-		if (localStorage.getItem(name)) localStorage.removeItem(name);
-	}
-};
-
-Skyborn.prototype.populateSavedGamesMenu = function(action, includeNewSave) {
-	// console.log('populateSavedGamesMenu');
-	var e = this.es['saved-games-menu'];
-	var keys = Object.keys(localStorage);
-	var savedGames = [];
-	for (var i = keys.length - 1; i >= 0; i--)
-		if (keys[i].indexOf(SAVE_PREFIX) == 0) savedGames.push(keys[i].replace(SAVE_PREFIX, ''));
-	while (e.lastChild) e.removeChild(e.lastChild);
-	if (includeNewSave) e.appendChild(this.makeNewSaveE('newSave'));
-	for (var i = savedGames.length - 1; i >= 0; i--) {
-		var savedGameE = document.createElement('div');
-		savedGameE.innerHTML = savedGames[i];
-		savedGameE.dataset.action = action;
-		e.appendChild(savedGameE);
-	}
-	e.appendChild(this.makeCloseE('closeSavedGameMenu'));
-};
-
-Skyborn.prototype.closeSavedGameMenuFromSave = function() {
-	// console.log('closeSavedGameMenuFromSave');
-	this.closeSavedGameMenu(1);
-};
-
-Skyborn.prototype.closeSavedGameMenuFromLoad = function() {
-	// console.log('closeSavedGameMenuFromLoad');
-	this.closeSavedGameMenu(2);
-};
-
-Skyborn.prototype.closeSavedGameMenuFromErase = function() {
-	// console.log('closeSavedGameMenuFromErase');
-	this.closeSavedGameMenu(3);
-};
-
-Skyborn.prototype.closeSavedGameMenu = function(i) {
-	// console.log('closeSavedGameMenu');
-	this.menuInputHandler = new MenuInputHandler(this, 'game-map-menu', 'closeGameMapMenu', i)
-	this.menuInputHandler.activate();
-	this.menuInputHandler.show();
-};
-
 Skyborn.prototype.goToMap = function(i, x, y) {
 	// console.log('goToMap');
 	this.player.mapState.mapI = i;
@@ -289,4 +163,12 @@ Skyborn.prototype.showQuestInstructions = function(questInstruction, onend) {
 	me.player.mapState.movement = null;
 	if (me.am) me.am.erase(me, func);
 	else func();
+};
+
+Skyborn.prototype.end = function() {
+	// console.log('end');
+	var me = this;
+	if (this.am) this.am.erase(me, function() {
+		me.cm.getAudio('endGameAudio').play();
+	});
 };

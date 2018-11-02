@@ -10,6 +10,7 @@ function Map1() {
 			this.restart();
 		}),
 		new GenericPersonObject(9, 8, 'character2F', [ 'That other guy always wants to tell about how we came to be.', 'Isn\'t he annoying?' ]),
+		new GenericPersonObject(5, 9, 'soldier', [ 'You are forbidden from passing here.' ]),
 		new HouseObject(1, 2, 1, 2, function(skyborn) {
 			skyborn.am.openDoor(skyborn, 'doorOpen1');
 			skyborn.goToMap(1, 2, 10);
@@ -34,7 +35,7 @@ function Map1() {
 			break;
 		case 'right': break;
 		case 'up': break;
-		case 'down': break;
+		case 'down': skyborn.end(); break;
 		}
 	});
 	m.mapObjects[7].spaces[0][0].interact = function(skyborn) {
