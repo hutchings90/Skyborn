@@ -231,6 +231,11 @@ body {
 	animation-iteration-count: infinite;
 }
 
+.question-instruction-image {
+	vertical-align: top;
+	margin-top: 1px;
+}
+
 @keyframes activePromptButton {
 	0% { background-color: black; color: white; }
 }

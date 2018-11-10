@@ -3,8 +3,8 @@ const TILE_WIDTH = 60;
 const ASSET_PATH = 'assets/';
 const IMAGE_PATH = ASSET_PATH + 'images/';
 const SOUND_PATH = ASSET_PATH + 'sounds/';
-const QUEST_INSTRUCTION_IMAGE_HEIGHT = 660;
-const QUEST_INSTRUCTION_IMAGE_WIDTH = 220;
+const QUEST_INSTRUCTION_IMAGE_HEIGHT = 658;
+const QUEST_INSTRUCTION_IMAGE_WIDTH = 219;
 
 function ContentManager() {
 	// console.log('ContentManager');
@@ -44,10 +44,10 @@ ContentManager.prototype.makeTile = function(key, src) {
 
 ContentManager.prototype.makeQuestInstructionImage = function(key, src) {
 	// console.log('makeQuestInstructionImage');
-	this.content[key] = this.makeImage(IMAGE_PATH + src, QUEST_INSTRUCTION_IMAGE_HEIGHT, QUEST_INSTRUCTION_IMAGE_WIDTH, key);
+	this.content[key] = this.makeImage(IMAGE_PATH + src, QUEST_INSTRUCTION_IMAGE_HEIGHT, QUEST_INSTRUCTION_IMAGE_WIDTH, key, 'question-instruction-image');
 };
 
-ContentManager.prototype.makeImage = function(src, height, width, id) {
+ContentManager.prototype.makeImage = function(src, height, width, id, className) {
 	// console.log('makeImage');
 	var e = this.makeElement('img');
 	if (id) {
@@ -56,6 +56,7 @@ ContentManager.prototype.makeImage = function(src, height, width, id) {
 	e.src = src;
 	e.height = height;
 	e.width = width;
+	e.className = className;
 	return e;
 };
 
@@ -83,7 +84,7 @@ ContentManager.prototype.init = function() {
 
 ContentManager.prototype.initQuestInstructions = function() {
 	// console.log('initQuestInstructions');
-	this.makeQuestInstructionImage('retrieveRingImage', 'retrieveRing.png');
+	this.makeQuestInstructionImage('retrieveRingImage', 'retrieveRing.jpg');
 };
 
 ContentManager.prototype.initTiles = function() {
