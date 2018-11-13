@@ -20,9 +20,9 @@ Item.prototype.wouldAffect = function() {
 	return false;
 };
 
-function DuplicatableItem(name, count) {
+function DuplicatableItem(name, count, description) {
 	// console.log('DuplicatableItem');
-	Item.call(this, name);
+	Item.call(this, name, description);
 	this.count = count;
 }
 

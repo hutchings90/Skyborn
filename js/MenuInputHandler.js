@@ -157,7 +157,7 @@ MenuInputHandler.prototype.chooseSelected = function() {
 	switch (e.dataset.type) {
 	case 'item':
 		var report = this.useItem(e);
-		if (report) this.skyborn.report(this.useItem(e));
+		if (report) this.skyborn.report(report);
 		break;
 	default:
 		if (e.innerHTML == 'Close') this.close();
